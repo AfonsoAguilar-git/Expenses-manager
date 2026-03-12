@@ -1,14 +1,21 @@
+require('dotenv').config()
 const express = require("express");
 const app = express();
+const db = require("../src/config/db")
+
+
 
 const expensesRoutes = require("./routes/expenses.routes");
-const handleError = require("./middlewares/middleWares")
+const {errorHandler} = require("./middlewares/middleWares")
 
 app.use(express.json());
 
 app.use("/expenses", expensesRoutes);
 
-app.use(handleError)
+app.use(errorHandler);
+
+db.connectDB();
+
 
 app.listen(3000, () => {
     console.log("Server running on port 3000");
