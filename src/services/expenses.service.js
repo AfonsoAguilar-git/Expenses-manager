@@ -1,4 +1,4 @@
-const {readExpenses,writeExpenses, getNextId} = require("../data/expenses");
+const {readExpenses,writeExpenses, getNextId} = require("../data/expenses.data");
 
 
 
