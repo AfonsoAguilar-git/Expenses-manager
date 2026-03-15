@@ -1,108 +1,60 @@
-const {readExpenses,writeExpenses, getNextId} = require("../data/expenses.data");
+const {getAllExpenses:getAllExpenses_data,createExpense: createExpense_data,getExpenseById: getExpenseById_data,deleteExpense:deleteExpense_data,updateExpense:updateExpense_data} = require("../data/expenses.data");
+const Expense = require("../models/expense.model");
 
 
 
 //adicionar desepesas a array
-function addExpense(data){
-    const expenses = readExpenses();
-
-    const newExpense = {
-    id: getNextId(expenses),
-    description: data.description,
-    amount: data.amount,
-    category: data.category,
-    date: new Date().toISOString()
-    };
-    expenses.push(newExpense);
-    writeExpenses(expenses);
-    return newExpense;
+async function addExpense(data){
+    return await createExpense_data(data)
 }
 
 //delete despesa da array
-function deleteExpense(id){
-    const expenses = readExpenses();
-   
-    const index = expenses.findIndex(exp => exp.id === id);
-
-    if (index === -1) {
-        return null;
-    }
-
-    expenses.splice(index, 1);
-    writeExpenses(expenses);
-    return true;
-
+async function deleteExpense(id){
+    return await deleteExpense_data(id);
+  
 }
 
 //atualiza despesa
 
-function updateExpense(id,data){
-    const expenses = readExpenses();
-    const expense = expenses.find(exp => exp.id === id);
-    
-    if(!expense){
-        return null
-    }
-
-    if(data.description !== undefined){
-        expense.description = data.description;
-    }
-    if(data.amount !== undefined){
-        expense.amount = Number(data.amount);
-    }
-    if(data.category !== undefined){
-        expense.category = data.category;
-    }
-    writeExpenses(expenses);
-    return expense;
+async function updateExpense(id,data){
+    return await updateExpense_data(id,data);
 }
 
 
 
 //devolve todas as despesas
-function listExpenses(){
-    const expenses = readExpenses();
-    return(expenses);
+async function listExpenses(){
+    return await getAllExpenses_data();
 }
 
 //get by id
-function getExpenseById(id){
-    const expenses = readExpenses();
-    return expenses.find(exp => exp.id === id) || null
-
+async function getExpenseById(id){
+    return await getExpenseById_data(id);
+    
 }
 
 //calucla o total de despesas e devolve
-function totalExpenses(){
-    const expenses = readExpenses();
-    return expenses.reduce((total,num) => {
-        total += num.amount
-        return total
-    },0) 
+async function totalExpenses(){
+    return await Expense.aggregate([{
+        $group: {_id:null, total:{$sum: "$amount" }}    
+    }])
     
 }   
 
 //devolve a todas as depesas de uma certa categoria
-function getExpenseByCategory(category){
-    const expenses = readExpenses();
-    return expenses.filter(exp => exp.category === category)
+async function getExpenseByCategory(category){
+    return await Expense.aggregate([{
+        $match:{ category: category}    
+    }])
     
-}
+}   
 
 //devolve despesa,quantidade, e media de uma categoria
-function getCategoryStat(category){
-    const expenses = readExpenses();
-    const result = expenses.reduce((acc,num)=> {
-        if (num.category === category){
-            acc.total += num.amount;
-            acc.count += 1;
-        }
-        return acc
-    },{total:0,count:0})
-    if (result.count > 0){
-        result.average = result.total/result.count;
-    }
-    return result;
+async function getCategoryStat(category){
+    return await Expense.aggregate([
+        {$match:{ category: category},},
+        {$group:{_id:"$category" , average:{$avg: "$amount"},total:{$sum: "$amount"},count:{$sum :1}}}
+    ])
 }
 
 
