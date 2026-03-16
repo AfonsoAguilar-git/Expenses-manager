@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require("express");
 const app = express();
 const db = require("../src/config/db")
+const cors = require("cors");
 
 
 
@@ -10,9 +11,13 @@ const {errorHandler} = require("./middlewares/middleWares")
 
 app.use(express.json());
 
+app.use(cors());
+
 app.use("/expenses", expensesRoutes);
 
 app.use(errorHandler);
+
+
 
 db.connectDB();
 
