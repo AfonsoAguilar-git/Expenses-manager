@@ -2,8 +2,6 @@ import { useState } from "react"
 
 
 
-
-
 function Form({setExpenses}){
     const [amount ,setAmount] = useState("");
     const [description ,setDescription] = useState("");

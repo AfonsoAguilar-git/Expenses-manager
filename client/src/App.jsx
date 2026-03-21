@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import Form from "./components/ExpenseForm"
+import ExpenseItem from "./components/ExpenseItem"
 
 
 function App() {
@@ -21,6 +22,22 @@ function App() {
     }
     fetchExpense();
   },[])
+
+  async function handleDelete(id){
+      try{
+        let response = await fetch(`http://localhost:3000/expenses/${id}`,{method:"DELETE"})
+        const data = expenses.filter(expense =>{
+          return id != expense._id;
+        });
+        
+        setExpenses(data);
+        setLoading(false);
+
+      } catch(err){
+        setError(err);
+        setLoading(false);
+      }
+  }
   
   if (loading) return (
     <div>
@@ -36,11 +53,7 @@ function App() {
     <div>
       <h1>Expense Tracker</h1>
       {expenses.map(expense => (
-        <div key={expense._id}>
-        <p>{expense.description}</p>
-        <p>{expense.amount}</p>
-        <p>{expense.category}</p>
-        </div>
+        <ExpenseItem  key={expense._id} expense={expense} handleDelete={handleDelete}/>
       ))}
       <div>
         <Form setExpenses={setExpenses} />
