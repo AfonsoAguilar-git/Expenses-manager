@@ -34,6 +34,7 @@ function Form({addExpense}){
                     <option>Food</option>
                     <option>House</option>
                     <option>Work</option>
+                    <option>School</option>
                 </select>
                 </div>
                 
