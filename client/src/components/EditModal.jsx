@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { X } from "lucide-react";
 
 function EditModal({selectedExpense,handleCloseModal,updateExpense}){
     const [amount ,setAmount] = useState(selectedExpense.amount);
@@ -22,9 +23,11 @@ function EditModal({selectedExpense,handleCloseModal,updateExpense}){
     
     
     return(
-        <div className="bg-neutral-100 rounded-lg w-150 h-140 m-auto text-neutral-800 fixed inset-0">
+        <div className="fixed inset-0 bg-black/60 z-50">
+        <div className=" mt-10 bg-neutral-100 rounded-lg w-150 h-140 m-auto text-neutral-800 ">
             <div className="flex">
-                <h1 className=" flex items-center justify-center flex-1 text-xl rounded-tl-lg font-bold rounded-tr-lg bg-neutral-700 text-yellow-300 h-10 ">Update Expense</h1>
+                <h1 className=" flex items-center justify-center flex-1 text-xl rounded-tl-lg font-bold  bg-neutral-700 text-yellow-300 h-10 ">Update Expense</h1>
+                <button  onClick={handleCloseModal} className="bg-neutral-700 rounded-tr-lg text-white hover:text-red-500"> <X size={20}/></button>
             </div>
             
             <form  className="flex flex-col h-full" onSubmit={handleUpdate}>
@@ -44,6 +47,7 @@ function EditModal({selectedExpense,handleCloseModal,updateExpense}){
                 <input  className="bg-yellow-300 rounded-md pt-1 pb-1 pl-3 pr-3 hover:bg-neutral-100 hover:text-yellow-400" value="submit" type="submit"/>
                 
             </form>
+        </div>
         </div>
     )
 }
