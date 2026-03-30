@@ -1,6 +1,6 @@
 # Expense Tracker
 
-## Web app designed to keep track and keep a clear history of your daily expenses.
+## Web app designed to keep track and a clear history of your daily expenses.
 
 
 ![App Screenshot](docs/Front_Page.png)
